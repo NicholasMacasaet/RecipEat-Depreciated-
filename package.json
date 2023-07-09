@@ -16,5 +16,10 @@
     "url": "https://github.com/NicholasMacasaet/RecipEat/issues"
   },
   "homepage": "https://github.com/NicholasMacasaet/RecipEat#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@fast-csv/format": "^4.3.5",
+    "@fast-csv/parse": "^4.3.6",
+    "fast-csv": "^4.3.6"
+  }
 }
