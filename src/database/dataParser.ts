@@ -1,14 +1,17 @@
 import * as csv from '@fast-csv/parse';
 import fs from 'fs';
+import { parse } from '@fast-csv/parse';
+
+// import csv from 'fast-csv';
 
 // interface to isolate the relevant data from the csv file
 interface CSVRow{
-    Name: string,
-    Calories: number,
-    'Fat (g)': number,
-    'Carbs (g)': number,
-    'Protein (g)': number,
-    'Serving Weight 1 (g)': number,
+    Name: string;
+    Calories: number;
+    'Fat (g)': number;
+    'Carbs (g)': number;
+    'Protein (g)': number;
+    'Serving Weight 1 (g)': number;
 }
 // function to parse the csv file and return an array of csvRow objects
 function csvParser(filePath: string): Promise<CSVRow[]> {
@@ -16,7 +19,8 @@ function csvParser(filePath: string): Promise<CSVRow[]> {
       const rowsArr: CSVRow[] = [];
   
       fs.createReadStream(filePath)
-        .pipe(csv.parse({ headers: true }))
+        .pipe(csv.parse({ headers: true, discardUnmappedColumns: true }))
+        // .pipe(parse({ headers: true, discardUnmappedColumns: true, transform: (row) => row as CSVRow }))
         .on('error', (error) => reject(error))
         .on('data', (row: CSVRow) => rowsArr.push(row))
         .on('end', () => resolve(rowsArr));
@@ -32,12 +36,13 @@ function csvParser(filePath: string): Promise<CSVRow[]> {
     // Parsing successful
     console.log('Parsing succeeded');
   } else {
-    // Parsing failed or no data found
+    // error in parsing
     console.log('Parsing failed or no data found');
   }
 
  })
 .catch((error) => {
+    //more error handling
        console.error('Error parsing CSV file:', error);
 });
 

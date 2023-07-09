@@ -33,7 +33,8 @@ function csvParser(filePath) {
     return new Promise((resolve, reject) => {
         const rowsArr = [];
         fs_1.default.createReadStream(filePath)
-            .pipe(csv.parse({ headers: true }))
+            .pipe(csv.parse({ headers: true, discardUnmappedColumns: true }))
+            // .pipe(parse({ headers: true, discardUnmappedColumns: true, transform: (row) => row as CSVRow }))
             .on('error', (error) => reject(error))
             .on('data', (row) => rowsArr.push(row))
             .on('end', () => resolve(rowsArr));
@@ -49,11 +50,12 @@ csvParser('../../database_files/macro_spreadsheet.csv')
         console.log('Parsing succeeded');
     }
     else {
-        // Parsing failed or no data found
+        // error in parsing
         console.log('Parsing failed or no data found');
     }
 })
     .catch((error) => {
+    //more error handling
     console.error('Error parsing CSV file:', error);
 });
 // let myObject =new Promise((resolve) => {
