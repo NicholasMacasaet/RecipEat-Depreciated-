@@ -33,5 +33,11 @@ class User {
     setrecipe_list(recipe_list) {
         this.recipe_list = recipe_list;
     }
+    addrecipe(recipe) {
+        this.recipe_list.push(recipe);
+    }
+    deleterecipe(recipe) {
+        this.recipe_list.splice(this.recipe_list.indexOf(recipe), 1);
+    }
 }
 exports.User = User;

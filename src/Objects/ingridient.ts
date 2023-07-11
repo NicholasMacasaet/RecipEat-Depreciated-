@@ -12,44 +12,44 @@ export abstract class ingridient{
     
 
     //some basic getters and setters
-    setCals(cals: number): void{
+    public setCals(cals: number): void{
         this.cals = cals;
     }
-    getCals(): number{
+    public getCals(): number{
         return this.cals;
     }
-    setCarbs(carbs: number): void{
+    public setCarbs(carbs: number): void{
         this.carbs = carbs;
     }
-    getCarbs(): number{
+    public getCarbs(): number{
         return this.carbs;
     }
-    setProtein(protein: number): void{
+    public setProtein(protein: number): void{
         this.protein = protein;
     }
 
-    getProtein(): number{
+    public getProtein(): number{
         return this.protein;
     }
 
-    setFat(fat: number): void{
+    public setFat(fat: number): void{
         this.fat = fat;
     }
-    getFat(): number{
+    public getFat(): number{
         return this.fat;
     }
 
-    setName(name: string): void{
+    public setName(name: string): void{
         this.name = name;
     }
-    getName(): string{
+    public getName(): string{
         return this.name;
     }
     
-    getConversionFactor(): number{
+    public getConversionFactor(): number{
         return this.conversionFactor;
     }
-    setConversionFactor(conversionFactor: number): void{
+    public setConversionFactor(conversionFactor: number): void{
         this.conversionFactor = conversionFactor;
     }
 }

@@ -16,60 +16,60 @@ export abstract class recipe{
     //potential other thing: can a recipe have a recipe as an ingridient? if so, how would that work?
     //this is a later problem, but it is something to think about
 
-    setName(name: string): void{
+    public setName(name: string): void{
         this.name = name;
     }
-    getName(): string{
+    public getName(): string{
         return this.name;
     }
 
-    getCarbs(): number{
+    public getCarbs(): number{
         return this.carbs;
     }
-    setCarbs(carbs: number){
+    public setCarbs(carbs: number){
         this.carbs = carbs;
     }
 
-    getProtein(): number{
+    public getProtein(): number{
         return this.protein;
     }
 
-    setProtein(protein: number){
+    public setProtein(protein: number){
         this.protein = protein;
     }
 
-    getFat(): number{
+    public getFat(): number{
         return this.fat;
     }
 
-    setFat(fat: number){
+    public setFat(fat: number){
         this.fat = fat;
     }
 
-    getCals(): number{
+    public getCals(): number{
         return this.cals;
     }
 
-    setCals(cals: number){
+    public setCals(cals: number){
         this.cals = cals;
     }
 
-    getIngridientsQuant(): Record<string, number>{
+    public getIngridientsQuant(): Record<string, number>{
         return this.ingridientsQuant;
     }
 
-    setIngridientsQuant(ingridientsQuant: Record<string, number>){
+    public setIngridientsQuant(ingridientsQuant: Record<string, number>){
         this.ingridientsQuant = ingridientsQuant;
     }
 
-    getIngridients(): ingridient[]{
+    public getIngridients(): ingridient[]{
         return this.ingridients;
     }
 
-    setIngridients(ingridients: ingridient[]){
+    public setIngridients(ingridients: ingridient[]){
         this.ingridients = ingridients;
     }
-
+}
     //keeping this code for reference
 
 
@@ -130,4 +130,3 @@ export abstract class recipe{
     //         }
     //     }
     // }
-}

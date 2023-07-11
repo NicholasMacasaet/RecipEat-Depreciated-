@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MacroCalc = void 0;
 //delegate the macro calculations to a separate class 
+//class to calculate the macros of a recipe as  well as add ingridients to a recipe
+//methods are written under the assumption that the recipe being passed in is from the user's recipe list
 class MacroCalc {
-    calculateMacros(recipe) {
+    calculateMacros(recipe, user) {
         //calculate the macros of the recipe by summing the macros of the ingridients and multiplying by the conversion factor
         let ingredients_list = recipe.getIngridients();
         let ingredients_record = recipe.getIngridientsQuant();
@@ -21,64 +24,111 @@ class MacroCalc {
             // recipe.fat += recipe.ingridients[i].getFat() * quantity;
             // recipe.cals += recipe.ingridients[i].getCals() * quantity;
         }
-    }
-    addIngridient(recipe, ingridient) {
-        let ingredients_list = recipe.getIngridients();
-        let ingredientsRecord = recipe.getIngridientsQuant();
-        //do a check to see if the ingridient is already in the recipe
-        for (let i = 0; i < ingredients_list.length; i++) {
-            if (ingredients_list[i].getName() == ingridient.getName()) {
-                //if the ingridient is already in the recipe, just increment the quantity and recalculate the macros
-                ingredientsRecord[ingridient.getName()]++;
-                //remember to set the new quantity for that ingridient
-                recipe.setIngridientsQuant(ingredientsRecord);
-                //this.calculateMacros();
-                //now that the quantity has been incremented in the record and the record has been set, recalculate the macros
-                this.calculateMacros(recipe);
+        let user_recip_list = user.getrecipe_list();
+        for (let i = 0; i < user_recip_list.length; i++) {
+            if (user_recip_list[i].getName() == recipe.getName()) {
+                user_recip_list[i] = recipe;
+                user.setrecipe_list(user_recip_list);
                 return;
             }
         }
-        //if the ingridient is not in the recipe, add it to the ingridients array
-        ingredients_list.push(ingridient);
-        //remember to set the new ingridients list
-        recipe.setIngridients(ingredients_list);
-        //next, set the quantity to 1
-        ingredientsRecord[ingridient.getName()] = 1;
-        //remember to set the new quantity for that ingridient in the record
-        recipe.setIngridientsQuant(ingredientsRecord);
-        //finally recalculate the macros
-        this.calculateMacros(recipe);
+        //we should never get here
+        this.flagToConsole();
+        return;
     }
-    deleteIngridient(recipe, ingridient) {
-        //if the ingridient is not in the recipe, return
-        let ingredients_list = recipe.getIngridients();
-        let ingredientsRecord = recipe.getIngridientsQuant();
-        //we need to check if the ingridient is in the recipe
-        if (!ingredients_list.includes(ingridient)) {
+    addIngridient(recipe, ingridient, user, quantity) {
+        //do a check to see if the recipe is in the user's recipe list
+        //if the recipe is not in the user's recipe list, return and flag to console
+        if (this.isInRecipeList(recipe, user) == false) {
+            this.flagToConsole();
             return;
         }
-        else { //if the ingridient is in the recipe, decrement the quantity and recalculate the macros
+        else {
+            //if the recipe is in the user's recipe list, continue
+            let ingredients_list = recipe.getIngridients();
+            let ingredientsRecord = recipe.getIngridientsQuant();
+            //do a check to see if the ingridient is already in the recipe
             for (let i = 0; i < ingredients_list.length; i++) {
-                if (ingredients_list[i].getName() == ingridient.getName()) { //if the ingrident's quantity is 1, delete it from the recipe
-                    if (ingredientsRecord[ingridient.getName()] == 1) {
-                        //delete the ingridient from the ingridientsQuant dict, we dont need to deincrement it since its going to be deleted
-                        delete ingredientsRecord[ingridient.getName()];
-                        //delete the ingridient from the ingridients array
-                        ingredients_list.splice(ingredients_list.indexOf(ingridient), 1);
-                        //remember to set the new ingridients list since we deleted an ingridient
-                        recipe.setIngridients(ingredients_list);
-                    }
-                    else { //else there is more than one ingridient, so just decrement the quantity
-                        ingredientsRecord[ingridient.getName()]--;
-                    }
-                    //since we changed the quantity in both cases, remember to set the new quantity for that ingridient
+                if (ingredients_list[i].getName() == ingridient.getName()) {
+                    //if the ingridient is already in the recipe, just increment the quantity by <quantity> and recalculate the macros
+                    ingredientsRecord[ingridient.getName()] += quantity;
+                    //remember to set the new quantity for that ingridient
                     recipe.setIngridientsQuant(ingredientsRecord);
-                    //finally,recalculate the macros
-                    this.calculateMacros(recipe);
-                    break;
+                    //this.calculateMacros();
+                    //now that the quantity has been incremented in the record and the record has been set, recalculate the macros
+                    this.calculateMacros(recipe, user);
+                    return;
                 }
+            }
+            //if the ingridient is not in the recipe, add it to the ingridients array
+            ingredients_list.push(ingridient);
+            //remember to set the new ingridients list
+            recipe.setIngridients(ingredients_list);
+            //next, set the quantity to 1
+            ingredientsRecord[ingridient.getName()] = quantity;
+            //remember to set the new quantity for that ingridient in the record
+            recipe.setIngridientsQuant(ingredientsRecord);
+            //finally recalculate the macros
+            this.calculateMacros(recipe, user);
+        }
+    }
+    deleteIngridient(recipe, ingridient, user, quantity) {
+        //do a check to see if the recipe is in the user's recipe list
+        //if the recipe is not in the user's recipe list, return and flag to console
+        if (this.isInRecipeList(recipe, user) == false) {
+            this.flagToConsole();
+            return;
+        }
+        else {
+            //if the recipe is in the user's recipe list, continue
+            let ingredients_list = recipe.getIngridients();
+            let ingredientsRecord = recipe.getIngridientsQuant();
+            //we need to check if the ingridient is in the recipe
+            //if the ingridient is not in the recipe, return
+            if (!ingredients_list.includes(ingridient)) {
+                //simpler logic here 
                 return;
+            }
+            else { //if the ingridient is in the recipe, decrement the quantity and recalculate the macros
+                for (let i = 0; i < ingredients_list.length; i++) {
+                    if (ingredients_list[i].getName() == ingridient.getName()) { //if the ingrident's quantity is 1, delete it from the recipe
+                        if (ingredientsRecord[ingridient.getName()] == 1) {
+                            //delete the ingridient from the ingridientsQuant dict, we dont need to deincrement it since its going to be deleted
+                            delete ingredientsRecord[ingridient.getName()];
+                            //delete the ingridient from the ingridients array
+                            ingredients_list.splice(ingredients_list.indexOf(ingridient), 1);
+                            //remember to set the new ingridients list since we deleted an ingridient
+                            recipe.setIngridients(ingredients_list);
+                        }
+                        else {
+                            /*check for if the quantity of the ingridient is greater than quantity in recipe done outside of this function
+                            in the ModifyRecipe class*/
+                            //if the quantity is greater than the quantity of the ingridient, deincrement the number of ingridients by the quantity
+                            ingredientsRecord[ingridient.getName()] -= quantity;
+                        }
+                        /*since we changed the quantity in both cases,
+                        remember to set the new quantity for that ingridient*/
+                        recipe.setIngridientsQuant(ingredientsRecord);
+                        //finally,recalculate the macros
+                        this.calculateMacros(recipe, user);
+                        break;
+                    }
+                    return;
+                }
             }
         }
     }
+    flagToConsole() {
+        console.log("Error in macro calculation, recipe not found in user's recipe list");
+    }
+    isInRecipeList(recipe, user) {
+        let user_recip_list = user.getrecipe_list();
+        for (let i = 0; i < user_recip_list.length; i++) {
+            if (user_recip_list[i].getName() == recipe.getName()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+exports.MacroCalc = MacroCalc;

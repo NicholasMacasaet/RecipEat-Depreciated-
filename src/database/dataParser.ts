@@ -26,6 +26,7 @@ function csvParser(filePath: string): Promise<CSVRow[]> {
         .on('end', () => resolve(rowsArr));
     });
   }
+  
 //navigate to the database_files and parse the csv file
  csvParser('../../database_files/macro_spreadsheet.csv')
  .then((rows: CSVRow[]) => {
