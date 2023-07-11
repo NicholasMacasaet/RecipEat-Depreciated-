@@ -13,7 +13,7 @@ export class MacroCalc {
         //calculate the macros of the recipe by summing the macros of the ingridients and multiplying by the conversion factor
 
         let ingredients_list = recipe.getIngridients();
-        let ingredients_record = recipe.getIngridientsQuant();
+        let ingredients_record = recipe.getIngridientsRecord();
 
         for(let i = 0; i < ingredients_list.length; i++){
             //retrieve the quantity of the ingridient and multiply it by the macros of the ingridient
@@ -59,7 +59,7 @@ export class MacroCalc {
         else{
             //if the recipe is in the user's recipe list, continue
             let ingredients_list = recipe.getIngridients();
-            let ingredientsRecord = recipe.getIngridientsQuant();
+            let ingredientsRecord = recipe.getIngridientsRecord();
 
             //do a check to see if the ingridient is already in the recipe
             for(let i = 0; i < ingredients_list.length; i++){
@@ -67,7 +67,7 @@ export class MacroCalc {
                     //if the ingridient is already in the recipe, just increment the quantity by <quantity> and recalculate the macros
                     ingredientsRecord[ingridient.getName()]+= quantity;
                     //remember to set the new quantity for that ingridient
-                    recipe.setIngridientsQuant(ingredientsRecord);
+                    recipe.setIngridientsRecord(ingredientsRecord);
                     //this.calculateMacros();
 
                     //now that the quantity has been incremented in the record and the record has been set, recalculate the macros
@@ -83,7 +83,7 @@ export class MacroCalc {
             //next, set the quantity to 1
             ingredientsRecord[ingridient.getName()] = quantity;
             //remember to set the new quantity for that ingridient in the record
-            recipe.setIngridientsQuant(ingredientsRecord);
+            recipe.setIngridientsRecord(ingredientsRecord);
 
             //finally recalculate the macros
             this.calculateMacros(recipe,user);
@@ -101,7 +101,7 @@ export class MacroCalc {
         else{
             //if the recipe is in the user's recipe list, continue
             let ingredients_list = recipe.getIngridients();
-            let ingredientsRecord = recipe.getIngridientsQuant();
+            let ingredientsRecord = recipe.getIngridientsRecord();
 
             //we need to check if the ingridient is in the recipe
             //if the ingridient is not in the recipe, return
@@ -132,7 +132,7 @@ export class MacroCalc {
                         
                         /*since we changed the quantity in both cases, 
                         remember to set the new quantity for that ingridient*/
-                        recipe.setIngridientsQuant(ingredientsRecord);
+                        recipe.setIngridientsRecord(ingredientsRecord);
                         //finally,recalculate the macros
                         this.calculateMacros(recipe,user);
                         break;
